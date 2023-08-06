@@ -81,9 +81,9 @@ public class EmployeeController {
 
         if (!ObjectUtils.isEmpty(employeeFilter.getAscending()))
             return integers.stream().sorted().collect(Collectors.toList());
-        else
-            return integers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        else return integers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
+
     @GetMapping(value = "/string")
     public List<String> stringTypeValue(EmployeeFilter employeeFilter) {
         ArrayList<String> strings = new ArrayList<>();
@@ -97,8 +97,7 @@ public class EmployeeController {
 
         if (!ObjectUtils.isEmpty(employeeFilter.getAscending()))
             return strings.stream().sorted().collect(Collectors.toList());
-        else
-            return strings.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        else return strings.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
 
