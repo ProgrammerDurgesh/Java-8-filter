@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/employee")
@@ -39,6 +40,25 @@ public class EmployeeController {
 
     @GetMapping(value = "/name")
     public List<Employee> getByName(EmployeeFilter employeeFilter) {
+        if (!ObjectUtils.isEmpty(employeeFilter.getName()))
+            return employeeRepository.findByName(employeeFilter.getName());
+        else return employeeRepository.findByCompanyName(employeeFilter.getCompanyName());
+
+    }
+
+    @GetMapping(value = "/filter")
+    public List<Employee> filter(EmployeeFilter employeeFilter) {
+        List<Employee> employees = employeeRepository.findAll();
+        if (!ObjectUtils.isEmpty(employeeFilter.getName()) && !ObjectUtils.isEmpty(employeeFilter.getStateName()) && !ObjectUtils.isEmpty(employeeFilter.getCompanyName()) && !ObjectUtils.isEmpty(employeeFilter.getZipCode())) {
+            return employees.stream().filter(employee -> employee.getName().equalsIgnoreCase(employeeFilter.getName()) && employee.getCompanyName().equalsIgnoreCase(employeeFilter.getCompanyName()) && employee.getStateName().equalsIgnoreCase(employeeFilter.getStateName()) && employee.getZipCode().equalsIgnoreCase(employeeFilter.getZipCode())).collect(Collectors.toList());
+        }
+        if (!ObjectUtils.isEmpty(employeeFilter.getStateName()) && ObjectUtils.isEmpty(employeeFilter.getZipCode())) {
+            return employees.stream().filter(employee -> employee.getStateName().equalsIgnoreCase(employeeFilter.getStateName())).collect(Collectors.toList());
+        }
+        if (!ObjectUtils.isEmpty(employeeFilter.getStateName()) && !ObjectUtils.isEmpty(employeeFilter.getZipCode())) {
+            return employees.stream().filter(employee ->employee.getStateName().equalsIgnoreCase(employeeFilter.getStateName()) && employee.getZipCode().equalsIgnoreCase(employeeFilter.getZipCode())).collect(Collectors.toList());
+        }
+
         if (!ObjectUtils.isEmpty(employeeFilter.getName()))
             return employeeRepository.findByName(employeeFilter.getName());
         else return employeeRepository.findByCompanyName(employeeFilter.getCompanyName());
