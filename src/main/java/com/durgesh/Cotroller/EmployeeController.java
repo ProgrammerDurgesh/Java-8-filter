@@ -4,6 +4,7 @@ import com.durgesh.filter.EmployeeFilter;
 import com.durgesh.jpa.EmployeeRepository;
 import com.durgesh.model.entity.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,17 @@ public class EmployeeController {
     @GetMapping
     public List<Employee> getEmployee() {
         return employeeRepository.findAll();
+    }
+
+    @GetMapping(value = "/get/{id}")
+    public Employee getEmployeeById(@PathVariable Integer id) {
+        return employeeRepository.findById(id).orElse(null);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public String deleteEmployeeById(@PathVariable Integer id) {
+        employeeRepository.deleteById(id);
+        return "Deleted Successfully ";
     }
 
 
@@ -79,11 +91,11 @@ public class EmployeeController {
         integers.add(20);
         integers.add(2000);
 
-        if (!ObjectUtils.isEmpty(employeeFilter.getAscending()))
+        if (ObjectUtils.isEmpty(employeeFilter.isAscending()))
             return integers.stream().sorted().collect(Collectors.toList());
-        else
-            return integers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        else return integers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
+
     @GetMapping(value = "/string")
     public List<String> stringTypeValue(EmployeeFilter employeeFilter) {
         ArrayList<String> strings = new ArrayList<>();
@@ -95,11 +107,27 @@ public class EmployeeController {
         strings.add("Zaze");
         strings.add("Randome");
 
-        if (!ObjectUtils.isEmpty(employeeFilter.getAscending()))
-            return strings.stream().sorted().collect(Collectors.toList());
-        else
-            return strings.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+
+        if (employeeFilter.isAscending()) return strings.stream().sorted().collect(Collectors.toList());
+        else return strings.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
+    @DeleteMapping(value = "/delete")
+    public String deleteFilter(EmployeeFilter employeeFilter) {
+        List<Employee> collect = null;
+        List<Employee> employees = employeeRepository.findAll();
+        if (employeeFilter.isDelete() && !ObjectUtils.isEmpty(employeeFilter.getZipCode())) {
+            collect = employees.stream().filter(employee -> {
+                if (employeeFilter.isDelete() && employee.getZipCode().equalsIgnoreCase(employeeFilter.getZipCode())) {
+                    employeeRepository.deleteById(employee.getId());
+                }
+                return false;
+            }).collect(Collectors.toList());
+        }
+        if (ObjectUtils.isEmpty(collect)) {
+            return "Record Deleted";
+        }
+        return "Not Deleted";
+    }
 
 }

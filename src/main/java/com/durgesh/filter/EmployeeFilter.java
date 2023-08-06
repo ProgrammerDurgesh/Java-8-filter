@@ -10,8 +10,9 @@ public class EmployeeFilter {
     private String companyName;
     private String zipCode;
     private String stateName;
-    private String ascending;
-    private String descending;
+    private boolean ascending;
+    private boolean descending;
+    private boolean delete;
 
 
 }
