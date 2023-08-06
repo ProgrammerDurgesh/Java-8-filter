@@ -8,5 +8,7 @@ import lombok.Setter;
 public class EmployeeFilter {
     private String name;
     private String companyName;
+    private String zipCode;
+    private String stateName;
 
 }
