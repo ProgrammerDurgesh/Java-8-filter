@@ -107,8 +107,8 @@ public class EmployeeController {
         strings.add("Zaze");
         strings.add("Randome");
 
-
         if (employeeFilter.isAscending()) return strings.stream().sorted().collect(Collectors.toList());
+
         else return strings.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
