@@ -69,7 +69,7 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/array")
-    public List<Integer> array(EmployeeFilter employeeFilter) {
+    public List<Integer> integerTypeValue(EmployeeFilter employeeFilter) {
         ArrayList<Integer> integers = new ArrayList<>();
         integers.add(100);
         integers.add(200);
@@ -83,6 +83,22 @@ public class EmployeeController {
             return integers.stream().sorted().collect(Collectors.toList());
         else
             return integers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+    }
+    @GetMapping(value = "/string")
+    public List<String> stringTypeValue(EmployeeFilter employeeFilter) {
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("AMIT");
+        strings.add("ANIl");
+        strings.add("Durgesh");
+        strings.add("Yogesh");
+        strings.add("Brijesh");
+        strings.add("Zaze");
+        strings.add("Randome");
+
+        if (!ObjectUtils.isEmpty(employeeFilter.getAscending()))
+            return strings.stream().sorted().collect(Collectors.toList());
+        else
+            return strings.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
     }
 
 
