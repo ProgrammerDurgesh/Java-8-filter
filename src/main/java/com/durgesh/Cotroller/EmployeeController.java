@@ -8,8 +8,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/employee")
@@ -56,7 +59,7 @@ public class EmployeeController {
             return employees.stream().filter(employee -> employee.getStateName().equalsIgnoreCase(employeeFilter.getStateName())).collect(Collectors.toList());
         }
         if (!ObjectUtils.isEmpty(employeeFilter.getStateName()) && !ObjectUtils.isEmpty(employeeFilter.getZipCode())) {
-            return employees.stream().filter(employee ->employee.getStateName().equalsIgnoreCase(employeeFilter.getStateName()) && employee.getZipCode().equalsIgnoreCase(employeeFilter.getZipCode())).collect(Collectors.toList());
+            return employees.stream().filter(employee -> employee.getStateName().equalsIgnoreCase(employeeFilter.getStateName()) && employee.getZipCode().equalsIgnoreCase(employeeFilter.getZipCode())).collect(Collectors.toList());
         }
 
         if (!ObjectUtils.isEmpty(employeeFilter.getName()))
@@ -65,6 +68,22 @@ public class EmployeeController {
 
     }
 
+    @GetMapping(value = "/array")
+    public List<Integer> array(EmployeeFilter employeeFilter) {
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(100);
+        integers.add(200);
+        integers.add(1);
+        integers.add(230);
+        integers.add(250);
+        integers.add(20);
+        integers.add(2000);
+
+        if (!ObjectUtils.isEmpty(employeeFilter.getAscending()))
+            return integers.stream().sorted().collect(Collectors.toList());
+        else
+            return integers.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+    }
 
 
 }
