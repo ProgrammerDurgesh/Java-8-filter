@@ -1,10 +1,12 @@
 package com.durgesh.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Getter
@@ -16,4 +18,5 @@ public class Employee extends Identity {
     private String companyName;
     private String zipCode;
     private String stateName;
+    private Integer orderId;
 }

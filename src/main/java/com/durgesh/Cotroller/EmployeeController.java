@@ -4,13 +4,12 @@ import com.durgesh.filter.EmployeeFilter;
 import com.durgesh.jpa.EmployeeRepository;
 import com.durgesh.model.entity.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -115,17 +114,31 @@ public class EmployeeController {
         List<Employee> collect = null;
         List<Employee> employees = employeeRepository.findAll();
         if (employeeFilter.isDelete() && !ObjectUtils.isEmpty(employeeFilter.getZipCode())) {
-            collect = employees.stream().filter(employee -> {
+            employees.stream().filter(employee -> {
                 if (employeeFilter.isDelete() && employee.getZipCode().equalsIgnoreCase(employeeFilter.getZipCode())) {
                     employeeRepository.deleteById(employee.getId());
+                } else {
+                    collect.add(employee);
                 }
                 return false;
-            }).collect(Collectors.toList());
+            });
+
         }
         if (ObjectUtils.isEmpty(collect)) {
             return "Record Deleted";
         }
         return "Not Deleted";
     }
+
+    @GetMapping(value = "/sortByOrder")
+    public List<Employee> filterByOrder(EmployeeFilter employeeFilter) {
+
+        List<Employee> employees = employeeRepository.findAll();
+        if (!ObjectUtils.isEmpty(employeeFilter.getZipCode()))
+            return employees.stream().sorted(Comparator.comparingDouble(Employee::getOrderId)).collect(Collectors.toList());
+        return null;
+
+    }
+
 
 }
